@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activities.FullScreenActivity"
+    android:background="@android:color/black">
+
+    <ImageView
+        android:id="@+id/imageViewOpened"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        app:srcCompat="@mipmap/ic_launcher"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/imageViewBackToFeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_alignTop="@+id/imageViewOpened"
+        android:layout_alignStart="@+id/imageViewOpened"
+        android:background="@drawable/ic_arrow_back_48dp"
+        android:backgroundTint="@android:color/white"
+        android:visibility="invisible"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/imageViewSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_alignTop="@+id/imageViewOpened"
+        android:layout_alignEnd="@+id/imageViewOpened"
+        android:background="@drawable/ic_file_download_48dp"
+        android:backgroundTint="@android:color/white"
+        android:visibility="invisible"
+        tools:ignore="ContentDescription" />
+
+</RelativeLayout>
