@@ -10,51 +10,41 @@ public class PostItem {
     private String author;
     private int commentsCount;
     private long unix_time;
-    private String date;
     private String picturePath;
+    private String postId;
 
-
-    public PostItem(String author, int commentsCount, long unix_time, String picturePath) {
+    public PostItem(String postId,String author, int commentsCount, long unix_time, String picturePath) {
         this.author = author;
         this.commentsCount = commentsCount;
         this.unix_time = unix_time;
         this.picturePath = picturePath;
+        this.postId = postId;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public int getCommentsCount() {
         return commentsCount;
     }
 
-    public void setCommentsCount(int commentsCount) {
-        this.commentsCount = commentsCount;
-    }
 
     public long getUnix_time() {
         return unix_time;
-    }
-
-    public void setUnix_time(long unix_time) {
-        this.unix_time = unix_time;
     }
 
     public String getPicturePath() {
         return picturePath;
     }
 
-    public void setPicturePath(String picturePath) {
-        this.picturePath = picturePath;
-    }
 
     public String getTimeOfPost(){
        return convertUnixInDate();
+    }
+
+    public String getPostId() {
+        return postId;
     }
 
     private String convertUnixInDate(){

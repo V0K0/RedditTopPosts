@@ -48,7 +48,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         Picasso.get().load(post.getPicturePath()).into(holder.imageViewPoster);
         holder.textViewAuthor.setText(post.getAuthor());
         holder.textViewComments.setText(comments);
-        holder.textViewDate.setText("");
+        holder.textViewDate.setText(post.getTimeOfPost());
     }
 
     @Override

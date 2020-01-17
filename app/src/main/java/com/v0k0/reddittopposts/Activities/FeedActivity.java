@@ -7,31 +7,37 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.v0k0.reddittopposts.Adapters.PostAdapter;
+import com.v0k0.reddittopposts.Network.JSONParser;
 import com.v0k0.reddittopposts.Network.RedditConnector;
 import com.v0k0.reddittopposts.R;
+import com.v0k0.reddittopposts.pojo.PostItem;
 
-
-import org.json.JSONObject;
+import java.util.ArrayList;
 
 public class FeedActivity extends AppCompatActivity {
 
-    private ImageView imageViewGo;
-    private ImageView imageViewBack;
-
+    private boolean isFirstQuerry = true;
+    private ArrayList<PostItem> posts = new ArrayList<>();
+    private PostAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
-        imageViewGo = findViewById(R.id.btn_get_forward);
-        imageViewBack = findViewById(R.id.btn_get_back);
-
-       JSONObject jsonObject = RedditConnector.getJSONFromReddit("");
-       if (jsonObject != null) {
-           Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-       }
-
-
+        getTopPostsFromReddit();
     }
+
+    private void getTopPostsFromReddit() {
+        if (isFirstQuerry) {
+            posts = JSONParser.getPostsFromJSON(RedditConnector.getJSONFromReddit(""));
+            isFirstQuerry = false;
+        } else {
+            String afterPost = posts.get(posts.size() - 1).getPostId();
+            posts.clear();
+            posts = JSONParser.getPostsFromJSON(RedditConnector.getJSONFromReddit(afterPost));
+        }
+    }
+
 
 }
