@@ -15,6 +15,7 @@ public class JSONParser {
     private static final String KEY_COMMENTS_COUNT = "num_comments";
     private static final String KEY_UNIX_TIME = "created_utc";
     private static final String KEY_POST_ID = "name";
+    private static final String KEY_BIG_IMAGE_URL = "url";
 
     private static final String KEY_DATA = "data";
     private static final String KEY_CHILDREN = "children";
@@ -32,7 +33,8 @@ public class JSONParser {
                 long unix_time = jsonPost.getLong(KEY_UNIX_TIME);
                 String id = jsonPost.getString(KEY_POST_ID);
                 String thumbnalPath = jsonPost.getString(KEY_THUMBNAIL);
-                PostItem post = new PostItem(id, author, commentsCount, unix_time, thumbnalPath);
+                String bigPicturePath = jsonPost.getString(KEY_BIG_IMAGE_URL);
+                PostItem post = new PostItem(id, author, commentsCount, unix_time, thumbnalPath, bigPicturePath);
                 result.add(post);
             }
         } catch (JSONException e) {
