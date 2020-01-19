@@ -26,19 +26,16 @@ public class RedditConnector {
 
 
     private static URL buildUrl(String afterPost) {
-
         Uri uri;
         URL resultURL = null;
         if (afterPost.isEmpty()) {
-            uri = Uri.parse(BASE_URL).buildUpon()
-                    .appendQueryParameter(PARAM_LIMIT, Integer.toString(POSTS_COUNT))
-                    .build();
-        } else {
-            uri = Uri.parse(BASE_URL).buildUpon()
-                    .appendQueryParameter(PARAM_LIMIT, Integer.toString(POSTS_COUNT))
-                    .appendQueryParameter(PARAM_AFTER, afterPost)
-                    .build();
+            return null;
         }
+
+        uri = Uri.parse(BASE_URL).buildUpon()
+                .appendQueryParameter(PARAM_LIMIT, Integer.toString(POSTS_COUNT))
+                .appendQueryParameter(PARAM_AFTER, afterPost)
+                .build();
 
         try {
             resultURL = new URL(uri.toString());
@@ -49,16 +46,43 @@ public class RedditConnector {
         return resultURL;
     }
 
-    public static JSONObject getJSONFromReddit(String afterPost){
+    private static URL buildUrl() {
+        Uri uri;
+        URL resultURL = null;
+        uri = Uri.parse(BASE_URL).buildUpon()
+                .appendQueryParameter(PARAM_LIMIT, Integer.toString(POSTS_COUNT))
+                .build();
+        try {
+            resultURL = new URL(uri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return resultURL;
+    }
+
+
+    public static JSONObject getJSONFromReddit(String afterPost) {
         JSONObject jsonResult = null;
         URL url = buildUrl(afterPost);
         try {
-            jsonResult =  new JSONLoadTask().execute(url).get();
+            jsonResult = new JSONLoadTask().execute(url).get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         return jsonResult;
     }
+
+    public static JSONObject getJSONFromReddit() {
+        JSONObject jsonResult = null;
+        URL url = buildUrl();
+        try {
+            jsonResult = new JSONLoadTask().execute(url).get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return jsonResult;
+    }
+
 
     private static class JSONLoadTask extends AsyncTask<URL, Void, JSONObject> {
         @Override

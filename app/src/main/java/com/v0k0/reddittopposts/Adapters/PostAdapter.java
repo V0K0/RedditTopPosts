@@ -20,6 +20,7 @@ import java.util.List;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
     private List<PostItem> posts;
+    private OnPostImageClickListener onPostImageClickListener;
 
     public List<PostItem> getPosts() {
         return posts;
@@ -32,6 +33,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     public PostAdapter() {
         this.posts = new ArrayList<>();
+    }
+
+    public interface OnPostImageClickListener{
+        void onPostImageClick(int position);
+    }
+
+    public void setOnPostImageClickListener(OnPostImageClickListener onPostImageClickListener) {
+        this.onPostImageClickListener = onPostImageClickListener;
     }
 
     @NonNull
@@ -69,6 +78,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             textViewComments = itemView.findViewById(R.id.textViewComments);
             textViewDate = itemView.findViewById(R.id.textViewDate);
             imageViewPoster = itemView.findViewById(R.id.imageViewPostPicture);
+            imageViewPoster.setOnClickListener(v -> {
+                if (onPostImageClickListener != null){
+                    onPostImageClickListener.onPostImageClick(getAdapterPosition());
+                }
+            });
         }
     }
 }

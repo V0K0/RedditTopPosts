@@ -5,15 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.v0k0.reddittopposts.Adapters.PostAdapter;
-import com.v0k0.reddittopposts.Network.JSONParser;
-import com.v0k0.reddittopposts.Network.RedditConnector;
 import com.v0k0.reddittopposts.R;
 import com.v0k0.reddittopposts.pojo.PostItem;
 
@@ -22,7 +19,9 @@ import java.util.Objects;
 
 public class FeedActivity extends AppCompatActivity {
 
-    private boolean isFirstQuerry = true;
+    private static final String LIST_KEY = "list_key";
+    private static final String KEY_BIG_IMAGE = "big_image";
+
     private ArrayList<PostItem> posts = new ArrayList<>();
     private PostAdapter adapter;
     private RecyclerView recyclerView;
@@ -44,11 +43,11 @@ public class FeedActivity extends AppCompatActivity {
             savedRecyclerView = savedInstanceState.getParcelable(RECYCLER_LAYOUT);
             restoreLayoutManager();
         } else {
-            getTopPostsFromReddit();
+            posts = getIntent().getParcelableArrayListExtra(LIST_KEY);
             adapter.setPosts(posts);
         }
         recyclerView.setAdapter(adapter);
-
+        adapter.setOnPostImageClickListener(onPostImageClickListener);
     }
 
     private void restoreLayoutManager(){
@@ -57,19 +56,17 @@ public class FeedActivity extends AppCompatActivity {
         }
     }
 
-    private void getTopPostsFromReddit() {
-        if (isFirstQuerry) {
-            posts = JSONParser.getPostsFromJSON(RedditConnector.getJSONFromReddit(""));
-            isFirstQuerry = false;
+    private PostAdapter.OnPostImageClickListener onPostImageClickListener = position -> {
+        PostItem post = posts.get(position);
+        String bigImagePath = post.getBigPicturePath();
+        if (bigImagePath.contains(".jpg") || bigImagePath.contains(".png")) {
+            Intent intent = new Intent(FeedActivity.this, FullScreenActivity.class);
+            intent.putExtra(KEY_BIG_IMAGE, bigImagePath);
+            startActivity(intent);
         } else {
-            String afterPost = posts.get(posts.size() - 1).getPostId();
-            posts.clear();
-            posts = JSONParser.getPostsFromJSON(RedditConnector.getJSONFromReddit(afterPost));
+            Toast.makeText(this, "There isn`t big picture", Toast.LENGTH_SHORT).show();
         }
-        if (!posts.isEmpty()){
-            Toast.makeText(this, "SUCCESS", Toast.LENGTH_SHORT).show();
-        }
-    }
+    };
 
 
     @Override

@@ -24,8 +24,8 @@
         android:layout_alignTop="@+id/imageViewOpened"
         android:layout_alignStart="@+id/imageViewOpened"
         android:background="@drawable/ic_arrow_back_48dp"
-        android:backgroundTint="@android:color/white"
-        android:visibility="invisible"
+        android:backgroundTint="@color/colorAccent"
+        android:visibility="visible"
         tools:ignore="ContentDescription" />
 
     <ImageView
@@ -37,8 +37,8 @@
         android:layout_alignTop="@+id/imageViewOpened"
         android:layout_alignEnd="@+id/imageViewOpened"
         android:background="@drawable/ic_file_download_48dp"
-        android:backgroundTint="@android:color/white"
-        android:visibility="invisible"
+        android:backgroundTint="@color/colorAccent"
+        android:visibility="visible"
         tools:ignore="ContentDescription" />
 
 </RelativeLayout>
