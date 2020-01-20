@@ -1,17 +1,32 @@
 package com.v0k0.reddittopposts.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.PersistableBundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.v0k0.reddittopposts.R;
+import com.v0k0.reddittopposts.pojo.PostItem;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Locale;
 
 public class FullScreenActivity extends AppCompatActivity {
 
@@ -19,13 +34,19 @@ public class FullScreenActivity extends AppCompatActivity {
     private ImageView imageViewDownload;
     private ImageView imageViewOpened;
     private boolean isButtonsHidden;
+    private boolean wasDownloaded;
     private static final String KEY_BIG_IMAGE = "big_image";
+    private static final String DOWNLOAD_STATUS = "download";
+    Animation animClick;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_screen);
+
+        wasDownloaded = savedInstanceState == null ? false : savedInstanceState.getBoolean(DOWNLOAD_STATUS);
+
         imageViewBackToFeed = findViewById(R.id.imageViewBackToFeed);
         imageViewDownload = findViewById(R.id.imageViewSave);
         imageViewOpened = findViewById(R.id.imageViewOpened);
@@ -38,6 +59,7 @@ public class FullScreenActivity extends AppCompatActivity {
         String bigPicturePath = intent.getStringExtra(KEY_BIG_IMAGE);
         Picasso.get().load(bigPicturePath).into(imageViewOpened);
 
+        animClick = AnimationUtils.loadAnimation(this, R.anim.fading_out_animation);
 
     }
 
@@ -47,10 +69,14 @@ public class FullScreenActivity extends AppCompatActivity {
     };
 
     private ImageView.OnClickListener onDownloadImageClick = (view) -> {
-
+        imageViewDownload.startAnimation(animClick);
+        if (!wasDownloaded) {
+            downloadImageToGallery();
+        }
     };
 
     private ImageView.OnClickListener onBackToFeedClick = (view) -> {
+        imageViewBackToFeed.startAnimation(animClick);
         finish();
     };
 
@@ -65,6 +91,26 @@ public class FullScreenActivity extends AppCompatActivity {
             fadeOut.setAnimationListener(fadeOutListener);
             imageViewDownload.startAnimation(fadeOut);
             imageViewBackToFeed.startAnimation(fadeOut);
+        }
+    }
+
+    private void downloadImageToGallery(){
+        BitmapDrawable drawable = (BitmapDrawable) imageViewOpened.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+        File sdCardDirectory = Environment.getExternalStorageDirectory();
+        File redditDirectory = new File(sdCardDirectory.getAbsolutePath() + "/reddit");
+        redditDirectory.mkdirs();
+        String fileName = String.format(Locale.getDefault(), "%d.jpg", System.currentTimeMillis());
+        File outFile = new File(redditDirectory, fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(outFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            wasDownloaded = true;
         }
     }
 
@@ -101,4 +147,9 @@ public class FullScreenActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(DOWNLOAD_STATUS , wasDownloaded);
+    }
 }

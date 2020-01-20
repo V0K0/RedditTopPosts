@@ -37,6 +37,7 @@ public class FeedActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewPosts);
         adapter = new PostAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
         if(savedInstanceState != null){
             posts = savedInstanceState.getParcelableArrayList(LIST_STATE);
             adapter.setPosts(posts);
@@ -64,10 +65,9 @@ public class FeedActivity extends AppCompatActivity {
             intent.putExtra(KEY_BIG_IMAGE, bigImagePath);
             startActivity(intent);
         } else {
-            Toast.makeText(this, "There isn`t big picture", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.no_big_picture_warning), Toast.LENGTH_SHORT).show();
         }
     };
-
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {

@@ -22,10 +22,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private List<PostItem> posts;
     private OnPostImageClickListener onPostImageClickListener;
 
-    public List<PostItem> getPosts() {
-        return posts;
-    }
-
     public void setPosts(List<PostItem> posts) {
         this.posts = posts;
         notifyDataSetChanged();

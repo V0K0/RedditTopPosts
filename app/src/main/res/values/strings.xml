@@ -3,4 +3,6 @@
     <string name="back">Back</string>
     <string name="next">Next</string>
     <string name="author_label">Author:</string>
+    <string name="internet_connection_state">Check internet connection</string>
+    <string name="no_big_picture_warning">There isn`t big picture</string>
 </resources>
