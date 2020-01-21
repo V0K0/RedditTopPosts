@@ -24,6 +24,16 @@
            />
     </ScrollView>
 
+    <ProgressBar
+        android:id="@+id/progressBarLoadingPosts"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"/>
+
     <include
         android:id="@+id/pagination"
         layout="@layout/bottom_pagination"

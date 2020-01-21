@@ -1,7 +1,13 @@
 package com.v0k0.reddittopposts.Network;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.content.AsyncTaskLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +32,7 @@ public class RedditConnector {
     private static final String PARAMS_BEFORE = "before";
 
 
-    private static URL buildUrl(boolean isAfter, String postId) {
+    public static URL buildUrl(boolean isAfter, String postId) {
         Uri uri;
         URL resultURL = null;
         if (postId.isEmpty()) {
@@ -53,7 +59,7 @@ public class RedditConnector {
         return resultURL;
     }
 
-    private static URL buildUrl() {
+    public static URL buildUrl() {
         Uri uri;
         URL resultURL = null;
         uri = Uri.parse(BASE_URL).buildUpon()
@@ -67,41 +73,37 @@ public class RedditConnector {
         return resultURL;
     }
 
+    public static class JSONLoader extends AsyncTaskLoader<JSONObject> {
 
-    public static JSONObject getJSONFromReddit(boolean isAfter, String postId) {
-        JSONObject jsonResult = null;
-        URL url = buildUrl(isAfter, postId);
-        try {
-            jsonResult = new JSONLoadTask().execute(url).get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+        private Bundle bundle;
+        private static final String KEY_URL = "url";
+
+        public JSONLoader(@NonNull Context context, Bundle bundle) {
+            super(context);
+            this.bundle = bundle;
         }
-        return jsonResult;
-    }
 
-    public static JSONObject getJSONFromReddit() {
-        JSONObject jsonResult = null;
-        URL url = buildUrl();
-        try {
-            jsonResult = new JSONLoadTask().execute(url).get();
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return jsonResult;
-    }
-
-
-    private static class JSONLoadTask extends AsyncTask<URL, Void, JSONObject> {
+        @Nullable
         @Override
-        protected JSONObject doInBackground(URL... urls) {
-            JSONObject jsonObject = null;
-            HttpURLConnection httpURLConnection = null;
-            if (urls == null || urls.length == 0) {
+        public JSONObject loadInBackground() {
+            if (bundle == null) {
+                return null;
+            }
+            String urlAsString = bundle.getString(KEY_URL);
+            URL url = null;
+            try {
+                url = new URL(urlAsString);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            if (url == null){
                 return null;
             }
 
+            JSONObject jsonObject = null;
+            HttpURLConnection httpURLConnection = null;
             try {
-                httpURLConnection = (HttpURLConnection) urls[0].openConnection();
+                httpURLConnection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = httpURLConnection.getInputStream();
                 InputStreamReader streamReader = new InputStreamReader(inputStream);
                 BufferedReader reader = new BufferedReader(streamReader);
@@ -123,6 +125,13 @@ public class RedditConnector {
             }
 
             return jsonObject;
+
+        }
+
+        @Override
+        protected void onStartLoading() {
+            super.onStartLoading();
+            forceLoad();
         }
     }
 
