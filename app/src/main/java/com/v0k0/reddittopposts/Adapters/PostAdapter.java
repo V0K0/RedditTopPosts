@@ -50,7 +50,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         PostItem post = posts.get(position);
         String comments = post.getCommentsCount() + " comments";
-        Picasso.get().load(post.getPicturePath()).into(holder.imageViewPoster);
+        Picasso.get().load(post.getThumbnailPath()).error(R.drawable.reddit_sad_error).into(holder.imageViewPoster);
         holder.textViewAuthor.setText(post.getAuthor());
         holder.textViewComments.setText(comments);
         holder.textViewDate.setText(post.getTimeOfPost());
@@ -68,7 +68,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         private TextView textViewComments;
         private ImageView imageViewPoster;
 
-        public PostViewHolder(@NonNull View itemView) {
+        PostViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewAuthor = itemView.findViewById(R.id.textViewAuthor);
             textViewComments = itemView.findViewById(R.id.textViewComments);

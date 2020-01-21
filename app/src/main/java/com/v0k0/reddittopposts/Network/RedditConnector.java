@@ -23,19 +23,26 @@ public class RedditConnector {
     private static final String PARAM_AFTER = "after";
 
     private static final int POSTS_COUNT = 10;
+    private static final String PARAMS_BEFORE = "before";
 
 
-    private static URL buildUrl(String afterPost) {
+    private static URL buildUrl(boolean isAfter, String postId) {
         Uri uri;
         URL resultURL = null;
-        if (afterPost.isEmpty()) {
+        if (postId.isEmpty()) {
             return null;
         }
-
-        uri = Uri.parse(BASE_URL).buildUpon()
-                .appendQueryParameter(PARAM_LIMIT, Integer.toString(POSTS_COUNT))
-                .appendQueryParameter(PARAM_AFTER, afterPost)
-                .build();
+        if (isAfter) {
+            uri = Uri.parse(BASE_URL).buildUpon()
+                    .appendQueryParameter(PARAM_LIMIT, Integer.toString(POSTS_COUNT))
+                    .appendQueryParameter(PARAM_AFTER, postId)
+                    .build();
+        } else {
+            uri = Uri.parse(BASE_URL).buildUpon()
+                    .appendQueryParameter(PARAM_LIMIT, Integer.toString(POSTS_COUNT))
+                    .appendQueryParameter(PARAMS_BEFORE, postId)
+                    .build();
+        }
 
         try {
             resultURL = new URL(uri.toString());
@@ -61,9 +68,9 @@ public class RedditConnector {
     }
 
 
-    public static JSONObject getJSONFromReddit(String afterPost) {
+    public static JSONObject getJSONFromReddit(boolean isAfter, String postId) {
         JSONObject jsonResult = null;
-        URL url = buildUrl(afterPost);
+        URL url = buildUrl(isAfter, postId);
         try {
             jsonResult = new JSONLoadTask().execute(url).get();
         } catch (ExecutionException | InterruptedException e) {
