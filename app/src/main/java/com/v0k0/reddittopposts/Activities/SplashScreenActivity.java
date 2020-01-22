@@ -39,6 +39,7 @@ public class SplashScreenActivity extends AppCompatActivity implements LoaderMan
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         progressBar = findViewById(R.id.progressBarSplashLoading);
+        progressBar.setVisibility(View.VISIBLE);
         if (checkConnectionState()){
             loaderManager = LoaderManager.getInstance(this);
             URL url = RedditConnector.buildUrl();
@@ -64,9 +65,7 @@ public class SplashScreenActivity extends AppCompatActivity implements LoaderMan
     @NonNull
     @Override
     public Loader<JSONObject> onCreateLoader(int id, @Nullable Bundle args) {
-        progressBar.setVisibility(View.VISIBLE);
-        RedditConnector.JSONLoader jsonLoader = new RedditConnector.JSONLoader(this, args);
-        return jsonLoader;
+        return new RedditConnector.JSONLoader(this, args);
     }
 
     @Override

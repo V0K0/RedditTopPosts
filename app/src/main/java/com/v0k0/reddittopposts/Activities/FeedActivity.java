@@ -14,6 +14,7 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.v0k0.reddittopposts.Adapters.PostAdapter;
@@ -39,6 +40,8 @@ public class FeedActivity extends AppCompatActivity implements LoaderManager.Loa
     private ImageView imageViewNextPage;
     private ImageView imageViewPreviousPage;
     private ProgressBar progressBar;
+    private TextView textViewNext;
+    private TextView textViewBack;
 
     private ArrayList<PostItem> posts = new ArrayList<>();
     private PostAdapter adapter;
@@ -59,6 +62,8 @@ public class FeedActivity extends AppCompatActivity implements LoaderManager.Loa
         imageViewNextPage = findViewById(R.id.btn_get_forward);
         imageViewPreviousPage = findViewById(R.id.btn_get_back);
         progressBar = findViewById(R.id.progressBarLoadingPosts);
+        textViewNext = findViewById(R.id.textViewGoNext);
+        textViewBack = findViewById(R.id.textViewGetBack);
 
         loaderManager = LoaderManager.getInstance(this);
 
@@ -79,10 +84,13 @@ public class FeedActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         recyclerView.setAdapter(adapter);
-        adapter.setOnPostImageClickListener(onPostImageClickListener);
 
+        adapter.setOnPostImageClickListener(onPostImageClickListener);
         imageViewNextPage.setOnClickListener(onNextPageClickListener);
+        textViewNext.setOnClickListener(onNextPageClickListener);
         imageViewPreviousPage.setOnClickListener(onPreviousPageClick);
+        textViewBack.setOnClickListener(onPreviousPageClick);
+
 
     }
 
@@ -103,6 +111,8 @@ public class FeedActivity extends AppCompatActivity implements LoaderManager.Loa
             currentPageNumber--;
             String firstPostId = posts.get(0).getPostId();
             downloadPosts(false, firstPostId);
+        } else if (currentPageNumber == 0){
+            Toast.makeText(this, getString(R.string.first_page_warn), Toast.LENGTH_SHORT).show();
         }
     };
 

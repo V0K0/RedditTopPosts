@@ -32,9 +32,9 @@ public class JSONParser {
                 int commentsCount = jsonPost.getInt(KEY_COMMENTS_COUNT);
                 long unix_time = jsonPost.getLong(KEY_UNIX_TIME);
                 String id = jsonPost.getString(KEY_POST_ID);
-                String thumbnalPath = jsonPost.getString(KEY_THUMBNAIL);
+                String thumbnailPath = jsonPost.getString(KEY_THUMBNAIL);
                 String bigPicturePath = jsonPost.getString(KEY_BIG_IMAGE_URL);
-                PostItem post = new PostItem(id, author, commentsCount, unix_time, thumbnalPath, bigPicturePath);
+                PostItem post = new PostItem(id, author, commentsCount, unix_time, thumbnailPath, bigPicturePath);
                 result.add(post);
             }
         } catch (JSONException e) {

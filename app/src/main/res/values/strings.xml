@@ -5,4 +5,5 @@
     <string name="author_label">Author:</string>
     <string name="internet_connection_state">Check internet connection</string>
     <string name="no_big_picture_warning">There isn`t big picture</string>
+    <string name="first_page_warn">This is first page</string>
 </resources>

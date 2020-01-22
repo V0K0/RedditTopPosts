@@ -7,23 +7,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PersistableBundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.v0k0.reddittopposts.Utils.UserPermissions;
 import com.v0k0.reddittopposts.R;
-import com.v0k0.reddittopposts.pojo.PostItem;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Locale;
@@ -45,11 +41,16 @@ public class FullScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_screen);
 
-        wasDownloaded = savedInstanceState == null ? false : savedInstanceState.getBoolean(DOWNLOAD_STATUS);
+        if (savedInstanceState == null){
+            wasDownloaded = false;
+        } else {
+            wasDownloaded = savedInstanceState.getBoolean(DOWNLOAD_STATUS);
+        }
+
 
         imageViewBackToFeed = findViewById(R.id.imageViewBackToFeed);
         imageViewDownload = findViewById(R.id.imageViewSave);
-        imageViewOpened = findViewById(R.id.imageViewOpened);
+        imageViewOpened = findViewById(R.id.imageViewBigPost);
         isButtonsHidden = false;
         imageViewOpened.setOnClickListener(onOpenedImageClick);
         imageViewDownload.setOnClickListener(onDownloadImageClick);
@@ -94,7 +95,10 @@ public class FullScreenActivity extends AppCompatActivity {
         }
     }
 
-    private void downloadImageToGallery(){
+    private void downloadImageToGallery() {
+
+        UserPermissions.checkStoragePermission(this);
+
         BitmapDrawable drawable = (BitmapDrawable) imageViewOpened.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
         File sdCardDirectory = Environment.getExternalStorageDirectory();
@@ -109,9 +113,13 @@ public class FullScreenActivity extends AppCompatActivity {
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            wasDownloaded = true;
         }
+
+        wasDownloaded = true;
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(Uri.fromFile(outFile));
+        sendBroadcast(intent);
+
     }
 
     private Animation.AnimationListener fadeInAnimationListener = new Animation.AnimationListener() {
@@ -150,6 +158,6 @@ public class FullScreenActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(DOWNLOAD_STATUS , wasDownloaded);
+        outState.putBoolean(DOWNLOAD_STATUS, wasDownloaded);
     }
 }

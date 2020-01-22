@@ -8,7 +8,7 @@
     android:background="@android:color/black">
 
     <ImageView
-        android:id="@+id/imageViewOpened"
+        android:id="@+id/imageViewBigPost"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
@@ -21,8 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_alignTop="@+id/imageViewOpened"
-        android:layout_alignStart="@+id/imageViewOpened"
+        android:layout_alignTop="@+id/imageViewBigPost"
+        android:layout_alignStart="@+id/imageViewBigPost"
         android:background="@drawable/ic_arrow_back_48dp"
         android:backgroundTint="@color/colorAccent"
         android:visibility="visible"
@@ -34,8 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
-        android:layout_alignTop="@+id/imageViewOpened"
-        android:layout_alignEnd="@+id/imageViewOpened"
+        android:layout_alignTop="@+id/imageViewBigPost"
+        android:layout_alignEnd="@+id/imageViewBigPost"
         android:background="@drawable/ic_file_download_48dp"
         android:backgroundTint="@color/colorAccent"
         android:visibility="visible"
